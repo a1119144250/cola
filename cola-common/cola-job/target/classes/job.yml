@@ -1,0 +1,7 @@
+spring:
+  xxl:
+    job:
+      enabled: true
+      adminAddresses: http://${cola.xxl-job.url}/xxl-job-admin/
+      appName: ${cola.xxl-job.appName}
+      accessToken: ${cola.xxl-job.accessToken}

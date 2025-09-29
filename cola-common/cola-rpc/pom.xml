@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.xiaowang</groupId>
+		<artifactId>cola-common</artifactId>
+		<version>0.0.1-SNAPSHOT</version><!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>com.xiaowang</groupId>
+	<artifactId>cola-rpc</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>cola-rpc</name>
+	<description>RPC远程调用组件</description>
+
+	<properties>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<!--   dubbo   -->
+		<dependency>
+			<groupId>org.apache.dubbo</groupId>
+			<artifactId>dubbo-spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.dubbo</groupId>
+			<artifactId>dubbo-registry-nacos</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.xiaowang</groupId>
+			<artifactId>cola-base</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

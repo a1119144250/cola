@@ -1,0 +1,20 @@
+dubbo:
+  consumer:
+    timeout: 3000
+    check: false
+    retries: 1
+  provider:
+    timeout: 5000
+    retries: 1
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: nacos://${cola.nacos.server.url}
+    parameters:
+      namespace: ${cola.dubbo.nacos.namespace}
+      group: ${cola.dubbo.nacos.group}
+  application:
+    name: ${spring.application.name}
+    qos-enable: true
+    qos-accept-foreign-ip: false

@@ -1,0 +1,20 @@
+# 场景类型分析规则配置
+scene-types:
+  SALES:
+    chinese-keywords: ["销售", "营收", "收入", "销量", "业绩", "订单", "客户", "销售额"]
+    english-keywords: ["sale", "revenue", "income", "order", "customer", "amount"]
+    description: "销售相关场景"
+    min-match-count: 3
+
+  INVENTORY:
+    chinese-keywords: ["库存", "仓储", "盘点", "进货", "出库", "入库", "商品", "货物"]
+    english-keywords: ["inventory", "stock", "warehouse", "goods", "product", "storage"]
+    description: "库存管理场景"
+    min-match-count: 3
+
+  FINANCIAL:
+    chinese-keywords: ["财务", "成本", "费用", "利润", "资金", "账务", "会计", "预算"]
+    english-keywords: ["finance", "cost", "expense", "profit", "budget", "account", "money"]
+    description: "财务管理场景"
+    min-match-count: 3
+

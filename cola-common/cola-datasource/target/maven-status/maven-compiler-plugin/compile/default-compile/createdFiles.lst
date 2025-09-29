@@ -1,0 +1,5 @@
+org/yaml/snakeyaml/inspector/UnTrustedTagInspector.class
+com/xiaowang/cola/datasource/domain/entity/BaseEntity.class
+org/yaml/snakeyaml/inspector/TagInspector.class
+com/xiaowang/cola/datasource/handler/DataObjectHandler.class
+com/xiaowang/cola/datasource/config/DatasourceConfiguration.class

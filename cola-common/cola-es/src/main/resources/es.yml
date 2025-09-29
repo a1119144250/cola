@@ -1,0 +1,11 @@
+spring:
+  elasticsearch:
+    enable: ${cola.elasticsearch.enable}
+    uris: http://${cola.elasticsearch.url}
+    username: ${cola.elasticsearch.username}
+    password: ${cola.elasticsearch.password}
+easy-es:
+  enable: ${cola.elasticsearch.enable}
+  address : ${cola.elasticsearch.url}
+  username: ${cola.elasticsearch.username}
+  password: ${cola.elasticsearch.password}

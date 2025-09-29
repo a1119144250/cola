@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    sentinel:
+      transport:
+        dashboard: ${cola.sentinel.url}
+        port: ${cola.sentinel.port}
+      datasource:
+        ds:
+          nacos:
+            server-addr: ${cola.nacos.server.url}
+            data-id:  ${cola.sentinel.nacos.data-id}
+            group-id: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow  # ???? degrade, param-flow, etc.
