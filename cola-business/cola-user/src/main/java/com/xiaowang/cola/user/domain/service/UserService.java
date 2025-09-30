@@ -57,10 +57,8 @@ import static com.xiaowang.cola.user.infrastructure.exception.UserErrorCode.USER
 import static com.xiaowang.cola.user.infrastructure.exception.UserErrorCode.USER_STATUS_IS_NOT_AUTH;
 import static com.xiaowang.cola.user.infrastructure.exception.UserErrorCode.USER_STATUS_IS_NOT_INIT;
 
-
 /**
  * 用户服务
- *
  * @author cola
  */
 @Service
@@ -108,10 +106,10 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     @PostConstruct
     public void init() {
         QuickConfig idQc = QuickConfig.newBuilder(":user:cache:id:")
-                .cacheType(CacheType.BOTH)
-                .expire(Duration.ofHours(2))
-                .syncLocal(true)
-                .build();
+                                      .cacheType(CacheType.BOTH)
+                                      .expire(Duration.ofHours(2))
+                                      .syncLocal(true)
+                                      .build();
         idUserCache = cacheManager.getOrCreateCache(idQc);
     }
 
@@ -121,30 +119,42 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
         String defaultNickName;
         String randomString;
         do {
-            randomString = RandomUtil.randomString(6).toUpperCase();
-            //前缀 + 6位随机数 + 手机号后四位
-            defaultNickName = DEFAULT_NICK_NAME_PREFIX + randomString + telephone.substring(7, 11);
+            randomString = RandomUtil.randomString(6)
+                                     .toUpperCase();
+            // 前缀 + 6位随机数 + 手机号后四位
+            defaultNickName = DEFAULT_NICK_NAME_PREFIX + randomString + telephone.substring(7,
+                                                                                            11);
         } while (nickNameExist(defaultNickName) || inviteCodeExist(randomString));
 
         String inviterId = null;
         if (StringUtils.isNotBlank(inviteCode)) {
             User inviter = userMapper.findByInviteCode(inviteCode);
             if (inviter != null) {
-                inviterId = inviter.getId().toString();
+                inviterId = inviter.getId()
+                                   .toString();
             }
         }
 
-        User user = register(telephone, defaultNickName, telephone, randomString, inviterId);
-        Assert.notNull(user, UserErrorCode.USER_OPERATE_FAILED.getCode());
+        User user = register(telephone,
+                             defaultNickName,
+                             telephone,
+                             randomString,
+                             inviterId);
+        Assert.notNull(user,
+                       UserErrorCode.USER_OPERATE_FAILED.getCode());
 
         addNickName(defaultNickName);
         addInviteCode(randomString);
         updateInviteRank(inviterId);
-        updateUserCache(user.getId().toString(), user);
+        updateUserCache(user.getId()
+                            .toString(),
+                        user);
 
-        //加入流水
-        long streamResult = userOperateStreamService.insertStream(user, UserOperateTypeEnum.REGISTER);
-        Assert.notNull(streamResult, () -> new BizException(RepoErrorCode.UPDATE_FAILED));
+        // 加入流水
+        long streamResult = userOperateStreamService.insertStream(user,
+                                                                  UserOperateTypeEnum.REGISTER);
+        Assert.notNull(streamResult,
+                       () -> new BizException(RepoErrorCode.UPDATE_FAILED));
 
         UserOperatorResponse userOperatorResponse = new UserOperatorResponse();
         userOperatorResponse.setSuccess(true);
@@ -154,7 +164,6 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
 
     /**
      * 管理员注册
-     *
      * @param telephone
      * @param password
      * @return
@@ -162,13 +171,18 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     @DistributeLock(keyExpression = "#telephone", scene = "USER_REGISTER")
     @Transactional(rollbackFor = Exception.class)
     public UserOperatorResponse registerAdmin(String telephone, String password) {
-        User user = registerAdmin(telephone, telephone, password);
-        Assert.notNull(user, UserErrorCode.USER_OPERATE_FAILED.getCode());
-        //idUserCache.put(user.getId().toString(), user);
+        User user = registerAdmin(telephone,
+                                  telephone,
+                                  password);
+        Assert.notNull(user,
+                       UserErrorCode.USER_OPERATE_FAILED.getCode());
+        // idUserCache.put(user.getId().toString(), user);
 
-        //加入流水
-        long streamResult = userOperateStreamService.insertStream(user, UserOperateTypeEnum.REGISTER);
-        Assert.notNull(streamResult, () -> new BizException(RepoErrorCode.UPDATE_FAILED));
+        // 加入流水
+        long streamResult = userOperateStreamService.insertStream(user,
+                                                                  UserOperateTypeEnum.REGISTER);
+        Assert.notNull(streamResult,
+                       () -> new BizException(RepoErrorCode.UPDATE_FAILED));
 
         UserOperatorResponse userOperatorResponse = new UserOperatorResponse();
         userOperatorResponse.setSuccess(true);
@@ -178,7 +192,6 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
 
     /**
      * 注册
-     *
      * @param telephone
      * @param nickName
      * @param password
@@ -190,7 +203,11 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
         }
 
         User user = new User();
-        user.register(telephone, nickName, password, inviteCode, inviterId);
+        user.register(telephone,
+                      nickName,
+                      password,
+                      inviteCode,
+                      inviterId);
         return save(user) ? user : null;
     }
 
@@ -200,13 +217,14 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
         }
 
         User user = new User();
-        user.registerAdmin(telephone, nickName, password);
+        user.registerAdmin(telephone,
+                           nickName,
+                           password);
         return save(user) ? user : null;
     }
 
     /**
      * 实名认证
-     *
      * @param userAuthRequest
      * @return
      */
@@ -215,7 +233,8 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     public UserOperatorResponse auth(UserAuthRequest userAuthRequest) {
         UserOperatorResponse userOperatorResponse = new UserOperatorResponse();
         User user = userMapper.findById(userAuthRequest.getUserId());
-        Assert.notNull(user, () -> new UserException(USER_NOT_EXIST));
+        Assert.notNull(user,
+                       () -> new UserException(USER_NOT_EXIST));
 
         if (user.getState() == UserStateEnum.AUTH || user.getState() == UserStateEnum.ACTIVE) {
             userOperatorResponse.setSuccess(true);
@@ -223,14 +242,20 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
             return userOperatorResponse;
         }
 
-        Assert.isTrue(user.getState() == UserStateEnum.INIT, () -> new UserException(USER_STATUS_IS_NOT_INIT));
-        Assert.isTrue(authService.checkAuth(userAuthRequest.getRealName(), userAuthRequest.getIdCard()), () -> new UserException(USER_AUTH_FAIL));
-        user.auth(userAuthRequest.getRealName(), userAuthRequest.getIdCard());
+        Assert.isTrue(user.getState() == UserStateEnum.INIT,
+                      () -> new UserException(USER_STATUS_IS_NOT_INIT));
+        Assert.isTrue(authService.checkAuth(userAuthRequest.getRealName(),
+                                            userAuthRequest.getIdCard()),
+                      () -> new UserException(USER_AUTH_FAIL));
+        user.auth(userAuthRequest.getRealName(),
+                  userAuthRequest.getIdCard());
         boolean result = updateById(user);
         if (result) {
-            //加入流水
-            long streamResult = userOperateStreamService.insertStream(user, UserOperateTypeEnum.AUTH);
-            Assert.notNull(streamResult, () -> new BizException(RepoErrorCode.UPDATE_FAILED));
+            // 加入流水
+            long streamResult = userOperateStreamService.insertStream(user,
+                                                                      UserOperateTypeEnum.AUTH);
+            Assert.notNull(streamResult,
+                           () -> new BizException(RepoErrorCode.UPDATE_FAILED));
             userOperatorResponse.setSuccess(true);
             userOperatorResponse.setUser(UserConvertor.INSTANCE.mapToVo(user));
         } else {
@@ -243,7 +268,6 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
 
     /**
      * 用户激活
-     *
      * @param userActiveRequest
      * @return
      */
@@ -252,14 +276,19 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     public UserOperatorResponse active(UserActiveRequest userActiveRequest) {
         UserOperatorResponse userOperatorResponse = new UserOperatorResponse();
         User user = userMapper.findById(userActiveRequest.getUserId());
-        Assert.notNull(user, () -> new UserException(USER_NOT_EXIST));
-        Assert.isTrue(user.getState() == UserStateEnum.AUTH, () -> new UserException(USER_STATUS_IS_NOT_AUTH));
-        user.active(userActiveRequest.getBlockChainUrl(), userActiveRequest.getBlockChainPlatform());
+        Assert.notNull(user,
+                       () -> new UserException(USER_NOT_EXIST));
+        Assert.isTrue(user.getState() == UserStateEnum.AUTH,
+                      () -> new UserException(USER_STATUS_IS_NOT_AUTH));
+        user.active(userActiveRequest.getBlockChainUrl(),
+                    userActiveRequest.getBlockChainPlatform());
         boolean result = updateById(user);
         if (result) {
-            //加入流水
-            long streamResult = userOperateStreamService.insertStream(user, UserOperateTypeEnum.ACTIVE);
-            Assert.notNull(streamResult, () -> new BizException(RepoErrorCode.UPDATE_FAILED));
+            // 加入流水
+            long streamResult = userOperateStreamService.insertStream(user,
+                                                                      UserOperateTypeEnum.ACTIVE);
+            Assert.notNull(streamResult,
+                           () -> new BizException(RepoErrorCode.UPDATE_FAILED));
             userOperatorResponse.setSuccess(true);
         } else {
             userOperatorResponse.setSuccess(false);
@@ -271,7 +300,6 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
 
     /**
      * 冻结
-     *
      * @param userId
      * @return
      */
@@ -279,11 +307,14 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     public UserOperatorResponse freeze(Long userId) {
         UserOperatorResponse userOperatorResponse = new UserOperatorResponse();
         User user = userMapper.findById(userId);
-        Assert.notNull(user, () -> new UserException(USER_NOT_EXIST));
-        Assert.isTrue(user.getState() == UserStateEnum.ACTIVE, () -> new UserException(USER_STATUS_IS_NOT_ACTIVE));
+        Assert.notNull(user,
+                       () -> new UserException(USER_NOT_EXIST));
+        Assert.isTrue(user.getState() == UserStateEnum.ACTIVE,
+                      () -> new UserException(USER_STATUS_IS_NOT_ACTIVE));
 
-        //第一次删除缓存
-        idUserCache.remove(user.getId().toString());
+        // 第一次删除缓存
+        idUserCache.remove(user.getId()
+                               .toString());
 
         if (user.getState() == UserStateEnum.FROZEN) {
             userOperatorResponse.setSuccess(true);
@@ -291,13 +322,17 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
         }
         user.setState(UserStateEnum.FROZEN);
         boolean updateResult = updateById(user);
-        Assert.isTrue(updateResult, () -> new BizException(RepoErrorCode.UPDATE_FAILED));
-        //加入流水
-        long result = userOperateStreamService.insertStream(user, UserOperateTypeEnum.FREEZE);
-        Assert.notNull(result, () -> new BizException(RepoErrorCode.UPDATE_FAILED));
+        Assert.isTrue(updateResult,
+                      () -> new BizException(RepoErrorCode.UPDATE_FAILED));
+        // 加入流水
+        long result = userOperateStreamService.insertStream(user,
+                                                            UserOperateTypeEnum.FREEZE);
+        Assert.notNull(result,
+                       () -> new BizException(RepoErrorCode.UPDATE_FAILED));
 
-        //第二次删除缓存
-        userCacheDelayDeleteService.delayedCacheDelete(idUserCache, user);
+        // 第二次删除缓存
+        userCacheDelayDeleteService.delayedCacheDelete(idUserCache,
+                                                       user);
 
         userOperatorResponse.setSuccess(true);
         return userOperatorResponse;
@@ -305,7 +340,6 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
 
     /**
      * 解冻
-     *
      * @param userId
      * @return
      */
@@ -313,25 +347,31 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     public UserOperatorResponse unfreeze(Long userId) {
         UserOperatorResponse userOperatorResponse = new UserOperatorResponse();
         User user = userMapper.findById(userId);
-        Assert.notNull(user, () -> new UserException(USER_NOT_EXIST));
+        Assert.notNull(user,
+                       () -> new UserException(USER_NOT_EXIST));
 
-        //第一次删除缓存
-        idUserCache.remove(user.getId().toString());
+        // 第一次删除缓存
+        idUserCache.remove(user.getId()
+                               .toString());
 
         if (user.getState() == UserStateEnum.ACTIVE) {
             userOperatorResponse.setSuccess(true);
             return userOperatorResponse;
         }
         user.setState(UserStateEnum.ACTIVE);
-        //更新数据库
+        // 更新数据库
         boolean updateResult = updateById(user);
-        Assert.isTrue(updateResult, () -> new BizException(RepoErrorCode.UPDATE_FAILED));
-        //加入流水
-        long result = userOperateStreamService.insertStream(user, UserOperateTypeEnum.UNFREEZE);
-        Assert.notNull(result, () -> new BizException(RepoErrorCode.UPDATE_FAILED));
+        Assert.isTrue(updateResult,
+                      () -> new BizException(RepoErrorCode.UPDATE_FAILED));
+        // 加入流水
+        long result = userOperateStreamService.insertStream(user,
+                                                            UserOperateTypeEnum.UNFREEZE);
+        Assert.notNull(result,
+                       () -> new BizException(RepoErrorCode.UPDATE_FAILED));
 
-        //第二次删除缓存
-        userCacheDelayDeleteService.delayedCacheDelete(idUserCache, user);
+        // 第二次删除缓存
+        userCacheDelayDeleteService.delayedCacheDelete(idUserCache,
+                                                       user);
 
         userOperatorResponse.setSuccess(true);
         return userOperatorResponse;
@@ -339,7 +379,6 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
 
     /**
      * 分页查询用户信息
-     *
      * @param keyWord
      * @param state
      * @param currentPage
@@ -347,34 +386,42 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
      * @return
      */
     public PageResponse<User> pageQueryByState(String keyWord, String state, int currentPage, int pageSize) {
-        Page<User> page = new Page<>(currentPage, pageSize);
+        Page<User> page = new Page<>(currentPage,
+                                     pageSize);
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("state", state);
+        wrapper.eq("state",
+                   state);
 
         if (keyWord != null) {
-            wrapper.like("telephone", keyWord);
+            wrapper.like("telephone",
+                         keyWord);
         }
-        wrapper.orderBy(true, true, "gmt_create");
+        wrapper.orderBy(true,
+                        true,
+                        "gmt_create");
 
-        Page<User> userPage = this.page(page, wrapper);
+        Page<User> userPage = this.page(page,
+                                        wrapper);
 
-        return PageResponse.of(userPage.getRecords(), (int) userPage.getTotal(), pageSize, currentPage);
+        return PageResponse.of(userPage.getRecords(),
+                               (int)userPage.getTotal(),
+                               pageSize,
+                               currentPage);
     }
 
     /**
      * 通过手机号和密码查询用户信息
-     *
      * @param telephone
      * @param password
      * @return
      */
     public User findByTelephoneAndPass(String telephone, String password) {
-        return userMapper.findByTelephoneAndPass(telephone, DigestUtil.md5Hex(password));
+        return userMapper.findByTelephoneAndPass(telephone,
+                                                 DigestUtil.md5Hex(password));
     }
 
     /**
      * 通过手机号查询用户信息
-     *
      * @param telephone
      * @return
      */
@@ -384,7 +431,6 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
 
     /**
      * 通过用户ID查询用户信息
-     *
      * @param userId
      * @return
      */
@@ -396,7 +442,6 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
 
     /**
      * 更新用户信息
-     *
      * @param userModifyRequest
      * @return
      */
@@ -405,21 +450,26 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     public UserOperatorResponse modify(UserModifyRequest userModifyRequest) {
         UserOperatorResponse userOperatorResponse = new UserOperatorResponse();
         User user = userMapper.findById(userModifyRequest.getUserId());
-        Assert.notNull(user, () -> new UserException(USER_NOT_EXIST));
-        Assert.isTrue(user.canModifyInfo(), () -> new UserException(USER_STATUS_CANT_OPERATE));
+        Assert.notNull(user,
+                       () -> new UserException(USER_NOT_EXIST));
+        Assert.isTrue(user.canModifyInfo(),
+                      () -> new UserException(USER_STATUS_CANT_OPERATE));
 
         if (StringUtils.isNotBlank(userModifyRequest.getNickName()) && nickNameExist(userModifyRequest.getNickName())) {
             throw new UserException(NICK_NAME_EXIST);
         }
-        BeanUtils.copyProperties(userModifyRequest, user);
+        BeanUtils.copyProperties(userModifyRequest,
+                                 user);
 
         if (StringUtils.isNotBlank(userModifyRequest.getPassword())) {
             user.setPasswordHash(DigestUtil.md5Hex(userModifyRequest.getPassword()));
         }
         if (updateById(user)) {
-            //加入流水
-            long streamResult = userOperateStreamService.insertStream(user, UserOperateTypeEnum.MODIFY);
-            Assert.notNull(streamResult, () -> new BizException(RepoErrorCode.UPDATE_FAILED));
+            // 加入流水
+            long streamResult = userOperateStreamService.insertStream(user,
+                                                                      UserOperateTypeEnum.MODIFY);
+            Assert.notNull(streamResult,
+                           () -> new BizException(RepoErrorCode.UPDATE_FAILED));
             addNickName(userModifyRequest.getNickName());
             userOperatorResponse.setSuccess(true);
 
@@ -441,19 +491,29 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     }
 
     public PageResponse<User> getUsersByInviterId(String inviterId, int currentPage, int pageSize) {
-        Page<User> page = new Page<>(currentPage, pageSize);
+        Page<User> page = new Page<>(currentPage,
+                                     pageSize);
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.select("nick_name", "gmt_create");
-        wrapper.eq("inviter_id", inviterId);
+        wrapper.select("nick_name",
+                       "gmt_create");
+        wrapper.eq("inviter_id",
+                   inviterId);
 
-        wrapper.orderBy(true, false, "gmt_create");
+        wrapper.orderBy(true,
+                        false,
+                        "gmt_create");
 
-        Page<User> userPage = this.page(page, wrapper);
-        return PageResponse.of(userPage.getRecords(), (int) userPage.getTotal(), pageSize, currentPage);
+        Page<User> userPage = this.page(page,
+                                        wrapper);
+        return PageResponse.of(userPage.getRecords(),
+                               (int)userPage.getTotal(),
+                               pageSize,
+                               currentPage);
     }
 
     public List<InviteRankInfo> getTopN(Integer topN) {
-        Collection<ScoredEntry<String>> rankInfos = inviteRank.entryRangeReversed(0, topN - 1);
+        Collection<ScoredEntry<String>> rankInfos = inviteRank.entryRangeReversed(0,
+                                                                                  topN - 1);
 
         List<InviteRankInfo> inviteRankInfos = new ArrayList<>();
 
@@ -466,7 +526,8 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
                     if (user != null) {
                         inviteRankInfo.setNickName(user.getNickName());
                         inviteRankInfo.setInviteCode(user.getInviteCode());
-                        inviteRankInfo.setInviteScore(rankInfo.getScore().intValue());
+                        inviteRankInfo.setInviteScore(rankInfo.getScore()
+                                                              .intValue());
                         inviteRankInfos.add(inviteRankInfo);
                     }
                 }
@@ -477,7 +538,7 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     }
 
     public boolean nickNameExist(String nickName) {
-        //如果布隆过滤器中存在，再进行数据库二次判断
+        // 如果布隆过滤器中存在，再进行数据库二次判断
         if (this.nickNameBloomFilter != null && this.nickNameBloomFilter.contains(nickName)) {
             return userMapper.findByNickname(nickName) != null;
         }
@@ -486,7 +547,7 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     }
 
     public boolean inviteCodeExist(String inviteCode) {
-        //如果布隆过滤器中存在，再进行数据库二次判断
+        // 如果布隆过滤器中存在，再进行数据库二次判断
         if (this.inviteCodeBloomFilter != null && this.inviteCodeBloomFilter.contains(inviteCode)) {
             return userMapper.findByInviteCode(inviteCode) != null;
         }
@@ -508,52 +569,55 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
      *     1、优先按照分数排，分数越大的，排名越靠前
      *     2、分数相同，则按照上榜时间排，上榜越早的排名越靠前
      * </pre>
-     *
      * @param inviterId
      */
     private void updateInviteRank(String inviterId) {
         if (inviterId == null) {
             return;
         }
-        //1、这里因为是一个私有方法，无法通过注解方式实现分布式锁。
-        //2、register方法已经加了锁，这里需要二次加锁的原因是register锁的是注册人，这里锁的是邀请人
+        // 1、这里因为是一个私有方法，无法通过注解方式实现分布式锁。
+        // 2、register方法已经加了锁，这里需要二次加锁的原因是register锁的是注册人，这里锁的是邀请人
         RLock rLock = redissonClient.getLock(inviterId);
         rLock.lock();
         try {
-            //获取当前用户的积分
+            // 获取当前用户的积分
             Double score = inviteRank.getScore(inviterId);
             if (score == null) {
                 score = 0.0;
             }
 
-            //获取最近一次上榜时间
+            // 获取最近一次上榜时间
             long currentTimeStamp = System.currentTimeMillis();
-            //把上榜时间转成小数(时间戳13位，所以除以10000000000000能转成小数)，并且倒序排列（用1减），即上榜时间越早，分数越大（时间越晚，时间戳越大，用1减一下，就反过来了）
-            double timePartScore = 1 - (double) currentTimeStamp / 10000000000000L;
+            // 把上榜时间转成小数(时间戳13位，所以除以10000000000000能转成小数)，并且倒序排列（用1减），即上榜时间越早，分数越大（时间越晚，时间戳越大，用1减一下，就反过来了）
+            double timePartScore = 1 - (double)currentTimeStamp / 10000000000000L;
 
-            //1、当前积分保留整数，即移除上一次的小数位
-            //2、当前积分加100，表示新邀请了一个用户
-            //3、加上“最近一次上榜时间的倒序小数位“作为score
-            inviteRank.add(score.intValue() + 100.0 + timePartScore, inviterId);
+            // 1、当前积分保留整数，即移除上一次的小数位
+            // 2、当前积分加100，表示新邀请了一个用户
+            // 3、加上“最近一次上榜时间的倒序小数位“作为score
+            inviteRank.add(score.intValue() + 100.0 + timePartScore,
+                           inviterId);
         } finally {
             rLock.unlock();
         }
     }
 
     private void updateUserCache(String userId, User user) {
-        idUserCache.put(userId, user);
+        idUserCache.put(userId,
+                        user);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         this.nickNameBloomFilter = redissonClient.getBloomFilter("nickName");
         if (nickNameBloomFilter != null && !nickNameBloomFilter.isExists()) {
-            this.nickNameBloomFilter.tryInit(100000L, 0.01);
+            this.nickNameBloomFilter.tryInit(100000L,
+                                             0.01);
         }
 
         this.inviteCodeBloomFilter = redissonClient.getBloomFilter("inviteCode");
         if (inviteCodeBloomFilter != null && !inviteCodeBloomFilter.isExists()) {
-            this.inviteCodeBloomFilter.tryInit(100000L, 0.01);
+            this.inviteCodeBloomFilter.tryInit(100000L,
+                                               0.01);
         }
 
         this.inviteRank = redissonClient.getScoredSortedSet("inviteRank");
