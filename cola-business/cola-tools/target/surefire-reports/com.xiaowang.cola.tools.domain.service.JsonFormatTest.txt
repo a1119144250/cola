@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.xiaowang.cola.tools.domain.service.JsonFormatTest
--------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.608 s -- in com.xiaowang.cola.tools.domain.service.JsonFormatTest

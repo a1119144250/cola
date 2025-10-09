@@ -1,9 +1,12 @@
+/Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/entity/Teacher.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/service/AuthServiceImpl.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/service/UserService.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/service/MockAuthServiceImpl.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/service/config/AuthProperties.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/infrastructure/exception/UserException.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/service/config/AuthConfiguration.java
+/Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/controller/ApmDemoController.java
+/Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/entity/Student.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/entity/User.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/service/UserCacheDelayDeleteService.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/param/UserModifyParam.java
@@ -15,6 +18,7 @@
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/entity/convertor/UserConvertor.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/facade/UserFacadeServiceImpl.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/service/UserOperateStreamService.java
+/Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/domain/entity/People.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/infrastructure/mapper/AesEncryptTypeHandler.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/ColaUserApplication.java
 /Users/wangjin/study/code/java/cola/cola-business/cola-user/src/main/java/com/xiaowang/cola/user/infrastructure/exception/UserErrorCode.java

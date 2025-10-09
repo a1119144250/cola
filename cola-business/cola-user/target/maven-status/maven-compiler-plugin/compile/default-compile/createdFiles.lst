@@ -1,6 +1,7 @@
 com/xiaowang/cola/user/param/UserModifyParam.class
 com/xiaowang/cola/user/domain/service/AuthServiceImpl.class
 com/xiaowang/cola/user/infrastructure/util/AssertUtils.class
+com/xiaowang/cola/user/controller/ApmDemoController.class
 com/xiaowang/cola/user/domain/entity/User.class
 com/xiaowang/cola/user/controller/UserController.class
 com/xiaowang/cola/user/domain/service/config/AuthConfiguration.class
@@ -23,4 +24,7 @@ com/xiaowang/cola/user/param/UserAuthParam.class
 com/xiaowang/cola/user/infrastructure/exception/UserException.class
 com/xiaowang/cola/user/domain/entity/convertor/UserConvertorImpl.class
 com/xiaowang/cola/user/facade/UserManageFacadeServiceImpl.class
+com/xiaowang/cola/user/domain/entity/People.class
+com/xiaowang/cola/user/domain/entity/Teacher.class
+com/xiaowang/cola/user/domain/entity/Student.class
 com/xiaowang/cola/user/infrastructure/mapper/UserMapper.class

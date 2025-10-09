@@ -1,0 +1,15 @@
+# Elastic APM 默认配置
+elastic:
+  apm:
+    enabled: false
+    server-url: http://localhost:8200
+    service-name: ${spring.application.name:cola-application}
+    service-version: 1.0.0
+    environment: ${spring.profiles.active:development}
+    sample-rate: 1.0
+    application-packages: com.xiaowang.cola
+    log-level: INFO
+    central-config: true
+    cloud-provider: true
+    # secret-token: your-secret-token
+    # api-key: your-api-key
