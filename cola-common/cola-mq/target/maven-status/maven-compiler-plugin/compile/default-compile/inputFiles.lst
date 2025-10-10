@@ -1,6 +1,0 @@
-/Users/wangjin/study/code/java/cola/cola-common/cola-mq/src/main/java/com/xiaowang/cola/stream/consumer/AbstractStreamConsumer.java
-/Users/wangjin/study/code/java/cola/cola-common/cola-mq/src/main/java/com/xiaowang/cola/stream/param/MessageBody.java
-/Users/wangjin/study/code/java/cola/cola-common/cola-mq/src/main/java/com/xiaowang/cola/stream/producer/StreamProducer.java
-/Users/wangjin/study/code/java/cola/cola-common/cola-mq/src/main/java/org/apache/rocketmq/client/producer/TransactionMQProducer.java
-/Users/wangjin/study/code/java/cola/cola-common/cola-mq/src/main/java/com/xiaowang/cola/stream/param/Message.java
-/Users/wangjin/study/code/java/cola/cola-common/cola-mq/src/main/java/com/xiaowang/cola/stream/config/StreamConfiguration.java

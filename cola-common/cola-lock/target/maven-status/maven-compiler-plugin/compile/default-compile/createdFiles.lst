@@ -1,5 +1,0 @@
-com/xiaowang/cola/lock/config/DistributeLockConfiguration.class
-com/xiaowang/cola/lock/DistributeLockException.class
-com/xiaowang/cola/lock/DistributeLockAspect.class
-com/xiaowang/cola/lock/DistributeLock.class
-com/xiaowang/cola/lock/DistributeLockConstant.class
