@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * @description:
@@ -105,29 +106,37 @@ public class TestDemo extends UserBaseTest {
 
         // 处理结果
         allDone.thenRun(() -> {
-            try {
-                List<Student> students = studentFuture.get();
-                List<Teacher> teachers = teacherFuture.get();
+                   try {
+                       List<Student> students = studentFuture.get();
+                       List<Teacher> teachers = teacherFuture.get();
 
-                System.out.println("学生列表：");
-                students.forEach(s -> System.out.println(s.getName()));
+                       System.out.println("学生列表：");
+                       students.forEach(s -> System.out.println(s.getName()));
 
-                System.out.println("老师列表：");
-                teachers.forEach(t -> System.out.println(t.getName()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).join(); // 等待处理完成
+                       System.out.println("老师列表：");
+                       teachers.forEach(t -> System.out.println(t.getName()));
+
+                   } catch (Exception e) {
+                       e.printStackTrace();
+                   }
+               })
+               .join(); // 等待处理完成
     }
 
     public List<Student> queryStudents() {
         // 模拟耗时
-        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
         return Arrays.asList(new Student("张三"), new Student("李四"));
     }
 
     public List<Teacher> queryTeachers() {
-        try { Thread.sleep(700); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+        }
         return Arrays.asList(new Teacher("王老师"), new Teacher("赵老师"));
     }
 
