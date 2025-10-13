@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防重Token测试页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48c774 0%, #3ec46d 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 199, 116, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f14668 0%, #e73656 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(241, 70, 104, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .result-box {
+            background: #f5f5f5;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .result-content {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .token-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .token-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .token-value {
+            font-size: 16px;
+            font-weight: 600;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+        }
+
+        .log-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .log-item {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-left: 3px solid transparent;
+        }
+
+        .log-info {
+            border-left-color: #3498db;
+            color: #3498db;
+        }
+
+        .log-success {
+            border-left-color: #2ecc71;
+            color: #2ecc71;
+        }
+
+        .log-error {
+            border-left-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .log-warning {
+            border-left-color: #f39c12;
+            color: #f39c12;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 防重Token测试页面</h1>
+        <p class="subtitle">用于测试订单重复提交防护功能</p>
+
+        <div class="form-group">
+            <label>服务地址</label>
+            <input type="text" id="baseUrl" value="http://localhost:8084" placeholder="http://localhost:8084">
+        </div>
+
+        <div class="form-group">
+            <label>业务场景</label>
+            <select id="scene">
+                <option value="order">订单提交 (order)</option>
+                <option value="payment">支付确认 (payment)</option>
+                <option value="form">表单提交 (form)</option>
+                <option value="import">数据导入 (import)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>用户ID</label>
+            <input type="text" id="userId" value="test-user-123" placeholder="输入用户ID">
+        </div>
+
+        <div class="form-group">
+            <label>业务ID（可选）</label>
+            <input type="text" id="bizId" placeholder="输入业务ID（可选）">
+        </div>
+
+        <div class="token-display" id="tokenDisplay" style="display: none;">
+            <div class="token-label">当前Token</div>
+            <div class="token-value" id="currentToken">-</div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="generateToken()">🎫 生成Token</button>
+            <button class="btn-success" onclick="validateToken()" id="btnValidate" disabled>✅ 验证Token</button>
+            <button class="btn-danger" onclick="validateTokenAgain()">🔄 重复验证</button>
+            <button class="btn-secondary" onclick="deleteToken()">🗑️ 删除Token</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="statGenerate">0</div>
+                <div class="stat-label">生成次数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statValidateSuccess">0</div>
+                <div class="stat-label">验证成功</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statValidateFail">0</div>
+                <div class="stat-label">验证失败</div>
+            </div>
+        </div>
+
+        <div class="result-box" id="resultBox" style="display: none;">
+            <div class="result-title">📋 响应结果</div>
+            <div class="result-content" id="resultContent"></div>
+        </div>
+
+        <div class="log-box" id="logBox">
+            <div class="log-item log-info">📘 日志记录</div>
+        </div>
+    </div>
+
+    <script>
+        let currentToken = null;
+        let stats = {
+            generate: 0,
+            validateSuccess: 0,
+            validateFail: 0
+        };
+
+        function addLog(message, type = 'info') {
+            const logBox = document.getElementById('logBox');
+            const time = new Date().toLocaleTimeString();
+            const log = document.createElement('div');
+            log.className = `log-item log-${type}`;
+            log.textContent = `[${time}] ${message}`;
+            logBox.appendChild(log);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function showResult(data) {
+            const resultBox = document.getElementById('resultBox');
+            const resultContent = document.getElementById('resultContent');
+            resultContent.textContent = JSON.stringify(data, null, 2);
+            resultBox.style.display = 'block';
+        }
+
+        function updateStats() {
+            document.getElementById('statGenerate').textContent = stats.generate;
+            document.getElementById('statValidateSuccess').textContent = stats.validateSuccess;
+            document.getElementById('statValidateFail').textContent = stats.validateFail;
+        }
+
+        async function generateToken() {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const scene = document.getElementById('scene').value;
+            const userId = document.getElementById('userId').value;
+            const bizId = document.getElementById('bizId').value;
+
+            if (!userId) {
+                alert('请输入用户ID');
+                return;
+            }
+
+            addLog('开始生成Token...', 'info');
+
+            try {
+                const response = await fetch(`${baseUrl}/submit-token/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        scene: scene,
+                        userId: userId,
+                        bizId: bizId || undefined
+                    })
+                });
+
+                const result = await response.json();
+                showResult(result);
+
+                if (result.code === 'SUCCESS' && result.data && result.data.token) {
+                    currentToken = result.data.token;
+                    document.getElementById('currentToken').textContent = currentToken;
+                    document.getElementById('tokenDisplay').style.display = 'block';
+                    document.getElementById('btnValidate').disabled = false;
+                    
+                    stats.generate++;
+                    updateStats();
+                    
+                    addLog(`✅ Token生成成功: ${currentToken.substring(0, 20)}...`, 'success');
+                    addLog(`⏰ 有效期: ${result.data.expireTime}秒`, 'info');
+                } else {
+                    addLog('❌ Token生成失败', 'error');
+                }
+            } catch (error) {
+                addLog(`❌ 请求失败: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        async function validateToken() {
+            if (!currentToken) {
+                alert('请先生成Token');
+                return;
+            }
+
+            const baseUrl = document.getElementById('baseUrl').value;
+            const scene = document.getElementById('scene').value;
+            const userId = document.getElementById('userId').value;
+
+            addLog('开始验证Token...', 'info');
+
+            try {
+                const response = await fetch(`${baseUrl}/submit-token/validate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: currentToken,
+                        scene: scene,
+                        userId: userId
+                    })
+                });
+
+                const result = await response.json();
+                showResult(result);
+
+                if (result.code === '200' && result.data) {
+                    if (result.data.valid) {
+                        stats.validateSuccess++;
+                        updateStats();
+                        addLog(`✅ Token验证成功: ${result.data.message}`, 'success');
+                        addLog('🔒 Token已被删除，无法再次使用', 'warning');
+                        document.getElementById('btnValidate').disabled = true;
+                    } else {
+                        stats.validateFail++;
+                        updateStats();
+                        addLog(`❌ Token验证失败: ${result.data.message}`, 'error');
+                    }
+                }
+            } catch (error) {
+                addLog(`❌ 请求失败: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        async function validateTokenAgain() {
+            if (!currentToken) {
+                alert('请先生成Token');
+                return;
+            }
+
+            addLog('⚠️ 测试重复验证（应该失败）...', 'warning');
+            await validateToken();
+        }
+
+        async function deleteToken() {
+            if (!currentToken) {
+                alert('请先生成Token');
+                return;
+            }
+
+            const baseUrl = document.getElementById('baseUrl').value;
+            const scene = document.getElementById('scene').value;
+            const userId = document.getElementById('userId').value;
+            const bizId = document.getElementById('bizId').value;
+
+            addLog('开始删除Token...', 'info');
+
+            try {
+                let url = `${baseUrl}/submit-token/delete?scene=${scene}&userId=${userId}`;
+                if (bizId) {
+                    url += `&bizId=${bizId}`;
+                }
+
+                const response = await fetch(url, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                showResult(result);
+
+                if (result.code === '200' && result.data) {
+                    addLog('✅ Token删除成功', 'success');
+                    currentToken = null;
+                    document.getElementById('tokenDisplay').style.display = 'none';
+                    document.getElementById('btnValidate').disabled = true;
+                } else {
+                    addLog('❌ Token删除失败', 'error');
+                }
+            } catch (error) {
+                addLog(`❌ 请求失败: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // 页面加载完成
+        addLog('📝 页面加载完成，请配置参数并开始测试', 'info');
+        addLog('📖 使用流程：1.生成Token → 2.验证Token → 3.测试重复验证', 'info');
+    </script>
+</body>
+</html>
+
