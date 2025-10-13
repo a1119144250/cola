@@ -8,7 +8,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     # Druid连接池配置
-#    datasource.druid:
+    #    datasource.druid:
     initial-size: 50 # 连接池初始化时创建的连接数。默认值为0。
     min-idle: 50 # 连接池中保持的最小空闲连接数量。当连接池中的连接数量小于这个值时，连接池会尝试创建新的连接。默认值为0。
     max-active: 200 # 连接池中允许的最大连接数。如果所有连接都被使用并且没有空闲连接，新的连接请求将被阻塞，直到有连接可用。默认值为8。
@@ -22,22 +22,9 @@ spring:
     pool-prepared-statements: true # 是否开启预处理语句池。预处理语句池可以提高性能，特别是在执行相同SQL语句多次时。默认为true。
     max-pool-prepared-statement-per-connection-size: 20 #每个连接上允许的最大预处理语句数。默认值为20。
 
-# MyBatis配置
-mybatis:
-  configuration:
-    map-underscore-to-camel-case: true # 将数据库字段的下划线命名转换为驼峰命名
-  mapper-locations: classpath:mapper/*.xml # MyBatis映射文件所在的位置，这里是使用XML的配置方式时需要配置的部分
-
+# MyBatis Plus配置
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true # 将数据库字段的下划线命名转换为驼峰命名
   mapper-locations: classpath*:mapper/*.xml
-
-# mybatis-flex配置
-mybatis-flex:
-  mapper-locations: classpath*:/mapper/*.xml
-  type-aliases-package: com.xiaowang.entity
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    map-underscore-to-camel-case: true
-    call-setters-on-nulls: true

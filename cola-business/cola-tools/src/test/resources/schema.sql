@@ -1,22 +1,30 @@
--- 工具表
-CREATE TABLE IF NOT EXISTS tool (
-    id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    tool_name varchar(100) NOT NULL,
-    description varchar(500) DEFAULT NULL,
-    tool_type varchar(50) NOT NULL,
-    version varchar(20) DEFAULT NULL,
-    status tinyint NOT NULL DEFAULT 1,
-    config_info text DEFAULT NULL,
-    gmt_create timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    gmt_modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    creator varchar(50) DEFAULT NULL,
-    modifier varchar(50) DEFAULT NULL
-);
-
--- 创建唯一索引
-CREATE UNIQUE INDEX IF NOT EXISTS uk_tool_name ON tool(tool_name);
-
--- 创建普通索引
-CREATE INDEX IF NOT EXISTS idx_tool_type ON tool(tool_type);
-CREATE INDEX IF NOT EXISTS idx_status ON tool(status);
-CREATE INDEX IF NOT EXISTS idx_gmt_create ON tool(gmt_create);
+-- 库存流水记录表
+CREATE TABLE IF NOT EXISTS `stock_record` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `record_id` varchar(64) NOT NULL COMMENT '流水记录ID（业务唯一标识）',
+  `product_id` varchar(64) NOT NULL COMMENT '商品ID',
+  `operation_type` varchar(32) NOT NULL COMMENT '操作类型（DEDUCT-扣减, ADD-增加, FREEZE-冻结, UNFREEZE-解冻）',
+  `amount` int(11) NOT NULL COMMENT '操作数量',
+  `before_stock` int(11) DEFAULT NULL COMMENT '操作前库存',
+  `after_stock` int(11) DEFAULT NULL COMMENT '操作后库存',
+  `user_id` varchar(64) DEFAULT NULL COMMENT '用户ID',
+  `order_id` varchar(64) DEFAULT NULL COMMENT '订单ID',
+  `scene` varchar(64) NOT NULL COMMENT '业务场景',
+  `status` varchar(32) NOT NULL DEFAULT 'PENDING' COMMENT '流水状态（PENDING-待处理, COMPLETED-已完成, CANCELLED-已取消, RECONCILED-已对账）',
+  `ext_info` text COMMENT '扩展信息（JSON格式）',
+  `reconcile_time` datetime DEFAULT NULL COMMENT '对账时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `deleted` int(11) DEFAULT 0 COMMENT '是否删除',
+  `lock_version` int(11) DEFAULT 0 COMMENT '乐观锁版本号',
+  `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_record_id` (`record_id`),
+  KEY `idx_product_id` (`product_id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_order_id` (`order_id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_gmt_create` (`gmt_create`),
+  KEY `idx_product_status` (`product_id`, `status`),
+  KEY `idx_reconcile_time` (`reconcile_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='库存流水记录表';

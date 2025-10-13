@@ -28,3 +28,5 @@ public class SubmitTokenGenerateParam {
    */
   private String bizId;
 }
+
+

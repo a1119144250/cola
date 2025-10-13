@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaowang.cola.tools.infrastructure.mapper.StockRecordMapper">
+
+    <!-- 批量插入流水记录 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO stock_record (
+            record_id, product_id, operation_type, amount, before_stock, after_stock,
+            user_id, order_id, scene, status, ext_info, remark, deleted, lock_version, gmt_create, gmt_modified
+        ) VALUES
+        <foreach collection="records" item="record" separator=",">
+            (
+                #{record.recordId}, #{record.productId}, #{record.operationType}, #{record.amount},
+                #{record.beforeStock}, #{record.afterStock}, #{record.userId}, #{record.orderId},
+                #{record.scene}, #{record.status}, #{record.extInfo}, #{record.remark},
+                #{record.deleted}, #{record.lockVersion}, #{record.gmtCreate}, #{record.gmtModified}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 批量更新状态为已对账 -->
+    <update id="batchUpdateStatusToReconciled">
+        UPDATE stock_record 
+        SET status = 'RECONCILED', reconcile_time = #{reconcileTime}, gmt_modified = NOW()
+        WHERE record_id IN
+        <foreach collection="recordIds" item="recordId" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </update>
+
+    <!-- 根据商品ID和状态查询流水记录 -->
+    <select id="selectByProductIdAndStatus" resultType="com.xiaowang.cola.tools.infrastructure.entity.StockRecordDO">
+        SELECT * FROM stock_record 
+        WHERE product_id = #{productId} 
+        AND status = #{status}
+        ORDER BY gmt_create DESC
+    </select>
+
+    <!-- 根据商品ID和时间范围查询流水记录 -->
+    <select id="selectByProductIdAndTimeRange" resultType="com.xiaowang.cola.tools.infrastructure.entity.StockRecordDO">
+        SELECT * FROM stock_record 
+        WHERE product_id = #{productId}
+        <if test="startTime != null">
+            AND gmt_create >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND gmt_create &lt;= #{endTime}
+        </if>
+        ORDER BY gmt_create DESC
+    </select>
+
+    <!-- 删除已对账的流水记录 -->
+    <delete id="deleteReconciledRecordsBefore">
+        DELETE FROM stock_record 
+        WHERE status = 'RECONCILED' 
+        AND reconcile_time &lt; #{beforeTime}
+    </delete>
+
+</mapper>

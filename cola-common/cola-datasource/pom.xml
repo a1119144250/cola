@@ -22,12 +22,6 @@
     </properties>
 
     <dependencies>
-        <!--    Mybatis    -->
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-        </dependency>
-
         <!--     Mybatis Plus    -->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -71,18 +65,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.mybatis-flex</groupId>
-            <artifactId>mybatis-flex-spring-boot-starter</artifactId>
-            <version>1.9.7</version>
-        </dependency>
-        <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.mybatis-flex</groupId>
-            <artifactId>mybatis-flex-codegen</artifactId>
-            <version>1.9.7</version>
         </dependency>
     </dependencies>
 
