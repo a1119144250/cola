@@ -1,5 +1,0 @@
-com/xiaowang/cola/apm/aspect/TracedAspect.class
-com/xiaowang/cola/apm/config/ElasticApmAutoConfiguration.class
-com/xiaowang/cola/apm/config/ElasticApmProperties.class
-com/xiaowang/cola/apm/annotation/Traced.class
-com/xiaowang/cola/apm/util/ApmUtils.class
