@@ -5,7 +5,7 @@ package com.xiaowang.cola.tools.domain.enums;
  * @author wangjin
  */
 
-public enum PayEnum {
+public enum PayType {
 
     ALIPAY,
     WECHAT,

@@ -1,4 +1,4 @@
-package com.xiaowang.cola.tools.domain.service;
+package com.xiaowang.cola.tools.domain.strategy;
 
 /**
  * 微信支付策略

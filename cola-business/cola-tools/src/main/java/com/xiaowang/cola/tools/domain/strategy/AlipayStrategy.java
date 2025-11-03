@@ -1,4 +1,4 @@
-package com.xiaowang.cola.tools.domain.service;
+package com.xiaowang.cola.tools.domain.strategy;
 
 /**
  * 支付宝支付策略
