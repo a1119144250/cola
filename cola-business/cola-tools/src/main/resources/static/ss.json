@@ -1,0 +1,72 @@
+{
+  "biz": "daojia",
+  "ids": [
+    {
+      "extInfo": {
+        "anchor_id": "124407",
+        "liveIndex": "0",
+        "sceneKeyName": "guessyoulikehome"
+      },
+      "goodsId": "17778379",
+      "goodsType": "waimai_coupon",
+      "subBiz": "waimai"
+    },
+    {
+      "extInfo": {
+        "anchor_id": "124407",
+        "liveIndex": "0",
+        "sceneKeyName": "guessyoulikehome"
+      },
+      "goodsId": "14698489",
+      "goodsType": "waimai_coupon",
+      "subBiz": "waimai"
+    },
+    {
+      "extInfo": {
+        "anchor_id": "124407",
+        "liveIndex": "0",
+        "sceneKeyName": "guessyoulikehome"
+      },
+      "goodsId": "15344287",
+      "goodsType": "waimai_coupon",
+      "subBiz": "waimai"
+    }
+  ],
+  "liveId": 13059065,
+  "liveInfo": {
+    "anchorId": 124407,
+    "anchorType": 7,
+    "anchorUserId": 0,
+    "anchorUserType": 0,
+    "certificateType": 2,
+    "liveId": 13059065,
+    "playStatus": 2
+  },
+  "mtUserId": "1743531703",
+  "optionToC": {
+    "needDeliveryInfo": false,
+    "needDiscountInfo": false,
+    "needLiveExclusive": false,
+    "needPoiOnHalfScreenUrl": false
+  },
+  "sourceInfo": {
+    "enableMlivePrice": false,
+    "mliveSource": "mlive",
+    "pageSource": "mtpt_cx_feed",
+    "requestScene": "caixi",
+    "requestSourceScene": "guessLikeHome"
+  },
+  "userDeviceInfo": {
+    "appDeviceId": "00000000000009670565B4D244BF59397DC272276803EA170818066028634693",
+    "appId": 10,
+    "clientType": 5,
+    "containType": 0,
+    "version": "12.44.204"
+  },
+  "userLocationInfo": {
+    "homePageCityId": 20,
+    "ip": "120.85.105.196",
+    "lat": "23.193279",
+    "lng": "113.450034"
+  }
+}

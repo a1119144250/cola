@@ -1,3 +1,0 @@
-com.xiaowang.cola.api.user.request.condition.UserPhoneQueryCondition
-com.xiaowang.cola.api.user.request.condition.UserPhoneAndPasswordQueryCondition
-com.xiaowang.cola.api.user.request.condition.UserIdQueryCondition
