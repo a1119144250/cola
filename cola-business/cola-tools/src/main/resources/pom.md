@@ -1,0 +1,24 @@
+- idea 插件汇总
+- 1.Adapte for Eclipe Code Formatter
+- 2.Alibaba Java Code Guidelines
+- 3.Atom Material Icons
+- 4.Background Image Plus
+- 5.Database Navigator
+- 6.Easy Naming
+- 7.GenerateAllSetter
+- 8.GitToolBox
+- 9.GsonFormat
+- 10.leetcode-editor
+- 11.Maven Helper
+- 12.MybatisLogFormat
+- 13.MyBatisX
+- 14.plantuml4idea
+- 15.Rainbow Brackets
+- 16.RestfulToolkit-fix
+- 17.Rider UI Theme Pack
+- 18.Search In Repository
+- 19.Translation
+- 20.vo2dto
+- 21.lombook
+- 22.git
+- 23.github
